@@ -1,10 +1,16 @@
 class Node():
 
-    def __init__(self,name,edge=None):
+    def __init__(self, name, p=None, goal=False):
         self.name = name
         self.node = []
-        self.parent = edge
+        self.parent = p
         self.edges = {}
+        self.goal=goal
+        self.huristics = None
+
+    # Getting the child by its number
+    def get_By_Num(self,child):
+        return self.node[child]
 
     # Getting the parent of the node
     def get_Parent(self):
@@ -23,3 +29,33 @@ class Node():
         node1.parent = self
         self.edges['{}'.format(name)]=weight
         return node1
+
+    # searching using DFS
+    def search_Dfs (self,start_node):
+        visited = []
+        fringe = [start_node]
+        while fringe is not None:
+            x= len(fringe) - 1
+            n=fringe[x]
+            fringe.pop(x)
+            if (n.goal):
+                p=n
+                solution=''
+                while (p.parent != None):
+                    solution += p.name + ' '
+                    p=p.parent
+                return solution
+            else:
+                visited.append(n)
+                for c in n.child:
+                    found=False
+                    for v in visited:
+                        if v.name == c.name:
+                            found=True
+                    if (found):
+                        continue
+                    else:
+                        fringe.append(c)
+
+        return 'failure'
+

@@ -21,5 +21,5 @@ graph.connect('C' ,'G' ,2)
 graph.connect('G' ,'H' ,2)
 graph.connect('B' ,'I' ,2)
 
-graph.dfs('A', 'E')
-ucs(graph, 'A', 'I')
+graph.dfs('A', ('E',"I"))
+ucs(graph, 'A',('H',"C"))

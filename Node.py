@@ -97,9 +97,10 @@ class Graph():
     def getNodes(self):
         return self.nodes
 
-    # searching using DFS
+    # searching using DFS by name of start and list of the goals .
     def dfs(self, startNode, goalNode):
-        self.nodes[goalNode].goal = True
+        for g in goalNode:
+            self.nodes[g].goal = True
         visited = []
         fringe = [self.nodes[startNode]]
 
@@ -109,12 +110,12 @@ class Graph():
             fringe.pop(x)
             if n.goal:
                 solList = getPath(n)
-                print(solList)
+                print('\nReached goal! the path is : {}'.format(solList))
                 # getting a list of names of the visited nodes
                 list = []
                 for v in visited:
                     list.append(v.name)
-                print('The list of visited Nodes : {}\nCost : {}'.format(list,getPathCost(self,solList)))
+                print('Cost : {}\nThe list of visited Nodes : {}\n'.format(getPathCost(self, solList), list))
                 return
             else:
                 visited.append(n)
@@ -131,49 +132,55 @@ class Graph():
         print('failed to get the goal')
         return
 
-
-def ucs(graph, key_node_start, key_node_goal):
-    if key_node_start not in graph.getNodes() or key_node_goal not in graph.getNodes():
-        print('Error: key_node_start \'{}\' or key_node_goal \'{}\' not exists!!'.format(key_node_start, key_node_goal))
+# searching using ucs by name of start and list of the goals .
+def ucs(graph, name_node_start, name_node_goal):
+    if name_node_start not in graph.getNodes():
+        print('Error: name_node_start \'{}\' not exists!!'.format(name_node_start))
+        return
+    for g in name_node_goal:
+        if (g not in graph.getNodes()):
+            print('Error: name_node_goal \'{}\' not exists!!'.format(g))
+            return
     else:
         # UCS uses priority queue, priority is the cumulative cost (smaller cost)
         queue = PriorityQueue()
 
         # expands initial node
         # get the keys of all successors of initial node
-        keys_successors = graph.getSuccessors(key_node_start)
+        names_successors = graph.getSuccessors(name_node_start)
 
         # adds the keys of successors in priority queue
-        for key_sucessor in keys_successors:
-            weight = graph.getWeightEdge(key_node_start, key_sucessor)
+        for name_sucessor in names_successors:
+            weight = graph.getWeightEdge(name_node_start, name_sucessor)
             # each item of queue is a tuple (key, cumulative_cost)
-            queue.insert((key_sucessor, weight), weight)
+            queue.insert((name_sucessor, weight), weight)
 
         reached_goal, cumulative_cost_goal = False, -1
-        visited = [key_node_start]
+        visited = [name_node_start]
         while not queue.is_empty():
 
             # remove item of queue, remember: item of queue is a tuple (key, cumulative_cost)
-            key_current_node, cost_node = queue.remove()
+            name_current_node, cost_node = queue.remove()
+            while name_current_node in visited:
+                name_current_node, cost_node = queue.remove()
+            visited.append(name_current_node)
 
-            visited.append(key_current_node)
-
-            if (key_current_node == key_node_goal):
+            if (name_current_node in name_node_goal):
                 reached_goal, cumulative_cost_goal = True, cost_node
                 break
 
-            # get all successors of key_current_node
-            keys_successors = graph.getSuccessors(key_current_node)
+            # get all successors of name_current_node
+            names_successors = graph.getSuccessors(name_current_node)
 
-            if keys_successors:  # checks if contains successors
-                # insert all successors of key_current_node in the queue
-                for key_sucessor in keys_successors:
-                    cumulative_cost = graph.getWeightEdge(key_current_node, key_sucessor) + cost_node
-                    queue.insert((key_sucessor, cumulative_cost), cumulative_cost)
+            if names_successors:  # checks if contains successors
+                # insert all successors of name_current_node in the queue
+                for name_sucessor in names_successors:
+                    cumulative_cost = graph.getWeightEdge(name_current_node, name_sucessor) + cost_node
+                    queue.insert((name_sucessor, cumulative_cost), cumulative_cost)
 
         if (reached_goal):
-            list=getPath(graph.nodes[key_current_node])
-            print('\nReached goal! the path is : {} \nCost : {}'.format(list,cumulative_cost_goal))
+            list = getPath(graph.nodes[name_current_node])
+            print('Reached goal! the path is : {} \nCost : {}'.format(list, cumulative_cost_goal))
             print('the list of visited Nodes : {} \n'.format(visited))
 
         else:
@@ -181,7 +188,7 @@ def ucs(graph, key_node_start, key_node_goal):
 
 
 def swap(list, left, right):
-    while (left != right):
+    while not (left >= right):
         temp = list[left]
         list[left] = list[right]
         list[right] = temp
@@ -200,8 +207,9 @@ def getPath(node):
     solList = swap(solList, 0, len(solList) - 1)
     return solList
 
-def getPathCost (graph,list):
-    cost=0
-    for x in range(0,len(list)-1):
-        cost += graph.getWeightEdge(list[x],list[x+1])
+
+def getPathCost(graph, list):
+    cost = 0
+    for x in range(0, len(list) - 1):
+        cost += graph.getWeightEdge(list[x], list[x + 1])
     return cost

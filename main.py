@@ -1,19 +1,25 @@
-from Node import Node
+from Node import *
 
-x=Node(name='A')
+graph = Graph()
+graph.addNode('A')
+graph.addNode('B')
+graph.addNode('C')
+graph.addNode('D')
+graph.addNode('E')
+graph.addNode('F')
+graph.addNode('G')
+graph.addNode('H')
+graph.addNode('I')
 
-x.add(name='g', weight=50)
-x.add(name='b', weight=60)
-x.add(name='h',weight=80)
 
-z=x.get_By_Name('g')
-c=x.get_By_Name('h')
-z.add(name='j',weight=20)
-c.add(name='l',weight=30)
-s=c.get_By_Num(0)
-s.add(name='m',goal=True,weight=40)
+graph.connect('A' ,'B' ,2)
+graph.connect('A' ,'C' ,2)
+graph.connect('B' ,'D' ,2)
+graph.connect('B' ,'E' ,2)
+graph.connect('C' ,'F' ,2)
+graph.connect('C' ,'G' ,2)
+graph.connect('G' ,'H' ,2)
+graph.connect('B' ,'I' ,2)
 
-print(x.search_Dfs(x))
-
-print(z.parent.name)
-print(x.edges)
+graph.dfs('A', 'E')
+ucs(graph, 'A', 'I')

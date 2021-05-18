@@ -1,5 +1,5 @@
 from Node import *
-from priority_queue import PriorityQueue
+
 
 class Huristcis():
 
@@ -23,18 +23,20 @@ class Huristcis():
                     p = graph.nodes[n].parent
                     if (p.name in self.nodes):
                         self.nodes[n] = self.nodes[p.name] + 1
-                        print(p.name, self.nodes[p.name])
 
             else:
-                self.nodes[n]=len(list)
+                self.nodes[n]=len(list)-1
             visited.append(n)
             l=graph.nodes[n].children
             for j in l:
                 if (j.name not in visited):
                     fringe.append(j.name)
-            print ('fringe is : {}'.format(fringe))
-            print('visited is : {}'.format(visited))
-            print ('huristics is : {}'.format(self.nodes[n]))
+
+        return self.nodes
+
+
+
+
 
 
 

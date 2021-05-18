@@ -1,5 +1,5 @@
-from Node import *
 from heuristic import *
+from search_Algo import Search
 
 graph = Graph()
 graph.addNode('A')
@@ -23,9 +23,13 @@ graph.connect('C' ,'G' ,2)
 graph.connect('G' ,'H' ,2)
 
 
-graph.dfs('A', ('E',"I"))
-ucs(graph, 'B',('E',"I"))
+
+
+s=Search()
 
 h=Huristcis()
-h.getHuristic(graph=graph,start='A',goal=('E',"H"))
-print(h.nodes)
+
+s=Search()
+s.greedy(graph,'A', ('F',"H"))
+s.dfs(graph,'A', ('E',"I"))
+s.ucs(graph, 'B',('E',"I"))

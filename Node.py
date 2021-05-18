@@ -109,7 +109,7 @@ class Graph():
             n = fringe[x]
             fringe.pop(x)
             if n.goal:
-                solList = getPath(n)
+                solList = getPath(n,startNode)
                 print('\nReached goal! the path is : {}'.format(solList))
                 # getting a list of names of the visited nodes
                 list = []
@@ -179,7 +179,7 @@ def ucs(graph, name_node_start, name_node_goal):
                     queue.insert((name_sucessor, cumulative_cost), cumulative_cost)
 
         if (reached_goal):
-            list = getPath(graph.nodes[name_current_node])
+            list = getPath(graph.nodes[name_current_node],name_node_start)
             print('Reached goal! the path is : {} \nCost : {}'.format(list, cumulative_cost_goal))
             print('the list of visited Nodes : {} \n'.format(visited))
 
@@ -198,9 +198,9 @@ def swap(list, left, right):
 
 
 # Getting the path to the goal from the start
-def getPath(node):
+def getPath(node,start):
     solList = []
-    while node.parent is not None:
+    while node.parent.name != start:
         solList.append(node.name)
         node = node.parent
     solList.append(node.name)
@@ -213,3 +213,36 @@ def getPathCost(graph, list):
     for x in range(0, len(list) - 1):
         cost += graph.getWeightEdge(list[x], list[x + 1])
     return cost
+
+
+def ucs_search(graph, name_node_start, name_node_goal):
+    queue = PriorityQueue()
+    names_successors = graph.getSuccessors(name_node_start)
+
+    for name_sucessor in names_successors:
+        weight = graph.getWeightEdge(name_node_start, name_sucessor)
+        queue.insert((name_sucessor, weight), weight)
+
+    reached_goal, cumulative_cost_goal = False, -1
+    visited = [name_node_start]
+    while not queue.is_empty():
+
+        name_current_node, cost_node = queue.remove()
+        while name_current_node in visited:
+            name_current_node, cost_node = queue.remove()
+        visited.append(name_current_node)
+
+        if (name_current_node in name_node_goal):
+            reached_goal, cumulative_cost_goal = True, cost_node
+            break
+        names_successors = graph.getSuccessors(name_current_node)
+
+        if names_successors:  # checks if contains successors
+            for name_sucessor in names_successors:
+                cumulative_cost = graph.getWeightEdge(name_current_node, name_sucessor) + cost_node
+                queue.insert((name_sucessor, cumulative_cost), cumulative_cost)
+
+    if (reached_goal):
+        return getPath(graph.nodes[name_current_node],name_node_start)
+    else:
+        return None

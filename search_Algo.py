@@ -9,6 +9,13 @@ class Search():
 
     # Dfs Search Algorithm :
     def dfs(self, graph, startNode, goalNode):
+        if startNode not in graph.getNodes():
+            print('\nError: start Node \'{}\' not exists!!'.format(startNode))
+            return
+        for g in goalNode:
+            if (g not in graph.nodes):
+                print('\nError: goal Node \'{}\' not exists!!'.format(g))
+                return
         visited = []
         fringe = [graph.nodes[startNode]]
         while len(fringe) != 0:
@@ -40,6 +47,13 @@ class Search():
 
     # Bfs Search Algorithm :
     def bfs(self, graph, startNode, goalNode):
+        if startNode not in graph.nodes:
+            print('\nError: startNode \'{}\' not exists!!'.format(startNode))
+            return
+        for g in goalNode:
+            if (g not in graph.nodes):
+                print('\nError: goal Node \'{}\' not exists!!'.format(g))
+                return
         visited = []
         fringe = [graph.nodes[startNode]]
         while len(fringe) != 0:
@@ -71,11 +85,11 @@ class Search():
     # Ucs search Algorithm :
     def ucs(self, graph, name_node_start, name_node_goal):
         if name_node_start not in graph.getNodes():
-            print('\nError: name_node_start \'{}\' not exists!!'.format(name_node_start))
+            print('\nError: start Node \'{}\' not exists!!'.format(name_node_start))
             return
         for g in name_node_goal:
             if (g not in graph.getNodes()):
-                print('\nError: name_node_goal \'{}\' not exists!!'.format(g))
+                print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
         else:
             # UCS uses priority queue, priority is the cumulative cost (smaller cost)
@@ -125,6 +139,13 @@ class Search():
 
     # Greedy Search Algorithm :
     def greedy(self, graph, startNode, goalNodes):
+        if startNode not in graph.getNodes():
+            print('\nError: start Node \'{}\' not exists!!'.format(startNode))
+            return
+        for g in goalNodes:
+            if (g not in graph.getNodes()):
+                print('\nError: goal Node \'{}\' not exists!!'.format(g))
+                return
         h = Huristcis()
         h.getHuristic(graph, startNode, goalNodes)
         print("\nThe heuristic function of the graph is : {}".format(h.nodes))
@@ -143,6 +164,45 @@ class Search():
             if n in goalNodes:
                 path = self.getPath(graph.nodes[n], startNode)
                 print("Reached goal by Greedy algorithm !! \nThe path is : {}".format(path))
+                print("Cost : {}".format(self.getPathCost(graph, path)))
+                print("The list of visited Nodes : {}".format(visited))
+                return
+            else:
+                visited.append(n)
+                for j in graph.nodes[n].children:
+                    if not (j.name == visited):
+                        fringe_dict[j.name] = [h.nodes[j.name]]
+                        fringe_list.clear()
+        print('\nfailed to get the goal ')
+        return
+
+        # Greedy Search Algorithm :
+    def aStar (self, graph, startNode, goalNodes):
+        if startNode not in graph.getNodes():
+            print('\nError: start Node \'{}\' not exists!!'.format(startNode))
+            return
+        for g in goalNodes:
+            if (g not in graph.getNodes()):
+                print('\nError: goal Node \'{}\' not exists!!'.format(g))
+                return
+        h = Huristcis()
+        h.F_of_X(graph, startNode, goalNodes)
+        print("\nThe F(x) function of the graph is : {}".format(h.optimalCostNodes))
+        fringe_dict = {startNode: h.optimalCostNodes[startNode]}
+        visited = []
+
+        while fringe_dict is not None:
+            # Sorts the fringe according to the heuristics of node
+            fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
+            list = fringe_dict.keys()
+            fringe_list = []
+            for j in list:
+                fringe_list.append(j)
+            n = fringe_list[0]
+            del fringe_dict[n]
+            if n in goalNodes:
+                path = self.getPath(graph.nodes[n], startNode)
+                print("Reached goal by A* algorithm !! \nThe path is : {}".format(path))
                 print("Cost : {}".format(self.getPathCost(graph, path)))
                 print("The list of visited Nodes : {}".format(visited))
                 return

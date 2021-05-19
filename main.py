@@ -34,4 +34,4 @@ s.greedy(graph,'A', ('F',"H"))
 s.dfs(graph,'A', ('E',"I"))
 s.ucs(graph, 'B',('E',"I"))
 s.bfs(graph,'A', ('F',"H"))
-
+s.aStar(graph, 'A', ('F', "H"))

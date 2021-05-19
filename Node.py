@@ -148,3 +148,10 @@ def swap(list, left, right):
         left += 1
         right -= 1
     return list
+
+# Getting the cost of the path from the Start node to the goal node/Nodes
+def getPathCost(graph, list):
+    cost = 0
+    for x in range(0, len(list) - 1):
+        cost += graph.getWeightEdge(list[x], list[x + 1])
+    return cost

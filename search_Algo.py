@@ -38,6 +38,36 @@ class Search():
         print('\nDFS failed to get the goal')
         return
 
+    # Bfs Search Algorithm :
+    def bfs(self, graph, startNode, goalNode):
+        visited = []
+        fringe = [graph.nodes[startNode]]
+        while len(fringe) != 0:
+            n = fringe[0]
+            fringe.pop(0)
+            if n.name in goalNode:
+                solList = self.getPath(n, startNode)
+                print('\nReached goal by BFS algorithm !! \nThe path is : {}'.format(solList))
+                # Getting a list of names of the visited nodes
+                list = []
+                for v in visited:
+                    list.append(v.name)
+                print('Cost : {}\nThe list of visited Nodes : {}\n'.format(self.getPathCost(graph, solList), list))
+                return
+            else:
+                visited.append(n)
+                for c in n.children:
+                    found = False
+                    for v in visited:
+                        if v.name == c.name:
+                            found = True
+                    if found:
+                        continue
+                    else:
+                        fringe.append(c)
+        print('\nDFS failed to get the goal')
+        return
+
     # Ucs search Algorithm :
     def ucs(self, graph, name_node_start, name_node_goal):
         if name_node_start not in graph.getNodes():

@@ -9,6 +9,9 @@ class Search():
 
     # Dfs Search Algorithm :
     def dfs(self, graph, startNode, goalNode):
+
+        # Checking if the start node and the goal node in the graph or not
+
         if startNode not in graph.getNodes():
             print('\nError: start Node \'{}\' not exists!!'.format(startNode))
             return
@@ -16,12 +19,19 @@ class Search():
             if (g not in graph.nodes):
                 print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
+
+        # Creating the visited and the fringe lists
+
         visited = []
         fringe = [graph.nodes[startNode]]
         while len(fringe) != 0:
             x = len(fringe) - 1
             n = fringe[x]
             fringe.pop(x)
+            visited.append(n)
+
+        # if this node is the goal then print the path to the node and the cost to reach it
+
             if n.name in goalNode:
                 solList = self.getPath(n, startNode)
                 print('\nReached goal by DFS algorithm !! \nThe path is : {}'.format(solList))
@@ -31,8 +41,10 @@ class Search():
                     list.append(v.name)
                 print('Cost : {}\nThe list of visited Nodes : {}\n'.format(self.getPathCost(graph, solList), list))
                 return
+
+            # else append the node to the visited list and add its children to the fringe
+
             else:
-                visited.append(n)
                 for c in n.children:
                     found = False
                     for v in visited:
@@ -47,6 +59,9 @@ class Search():
 
     # Bfs Search Algorithm :
     def bfs(self, graph, startNode, goalNode):
+
+        # Checking if the start node and the goal node in the graph or not
+
         if startNode not in graph.nodes:
             print('\nError: startNode \'{}\' not exists!!'.format(startNode))
             return
@@ -54,11 +69,17 @@ class Search():
             if (g not in graph.nodes):
                 print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
+
+        # Creating the visited and the fringe lists
+
         visited = []
         fringe = [graph.nodes[startNode]]
         while len(fringe) != 0:
             n = fringe[0]
             fringe.pop(0)
+            visited.append(n)
+            # if this node is the goal then print the path to the node and the cost to reach it
+
             if n.name in goalNode:
                 solList = self.getPath(n, startNode)
                 print('\nReached goal by BFS algorithm !! \nThe path is : {}'.format(solList))
@@ -68,8 +89,10 @@ class Search():
                     list.append(v.name)
                 print('Cost : {}\nThe list of visited Nodes : {}\n'.format(self.getPathCost(graph, solList), list))
                 return
+
+            # else append the node to the visited list and add its children to the fringe
+
             else:
-                visited.append(n)
                 for c in n.children:
                     found = False
                     for v in visited:
@@ -83,62 +106,55 @@ class Search():
         return
 
     # Ucs search Algorithm :
-    def ucs(self, graph, name_node_start, name_node_goal):
-        if name_node_start not in graph.getNodes():
-            print('\nError: start Node \'{}\' not exists!!'.format(name_node_start))
+    def ucs(self, graph, startNode, goalNode):
+
+        # Checking if the start node and the goal node in the graph or not
+
+        if startNode not in graph.getNodes():
+            print('\nError: start Node \'{}\' not exists!!'.format(startNode))
             return
-        for g in name_node_goal:
+        for g in goalNode:
             if (g not in graph.getNodes()):
                 print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
-        else:
-            # UCS uses priority queue, priority is the cumulative cost (smaller cost)
-            queue = PriorityQueue()
+        # creating a dict fringe to store the nodes and its cost and a list of visited nodes to store the node names
 
-            # expands initial node
-            # get the keys of all successors of initial node
-            names_successors = graph.getSuccessors(name_node_start)
+        fringe_dict = {startNode: 0}
+        visited = []
 
-            # adds the keys of successors in priority queue
-            for name_sucessor in names_successors:
-                weight = graph.getWeightEdge(name_node_start, name_sucessor)
-                # each item of queue is a tuple (key, cumulative_cost)
-                queue.insert((name_sucessor, weight), weight)
+        while len(fringe_dict) != 0:
+            # Sorts the fringe according to the cost of node
+            fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
+            fringe_list = []
+            for j in fringe_dict.keys():
+                fringe_list.append(j)
+            n = fringe_list[0]
+            del fringe_dict[n]
+            visited.append(n)
+            # if node is the goal stop and print the path and cost
 
-            reached_goal, cumulative_cost_goal = False, -1
-            visited = [name_node_start]
-            while not queue.is_empty():
+            if n in goalNode:
+                path = getPath(graph.nodes[n], startNode)
+                print("Reached goal by UCS algorithm !! \nThe path is : {}".format(path))
+                print("Cost : {}".format(getPathCost(graph, path)))
+                print("The list of visited Nodes : {}".format(visited))
+                return path
 
-                # remove item of queue, remember: item of queue is a tuple (key, cumulative_cost)
-                name_current_node, cost_node = queue.remove()
-                while name_current_node in visited:
-                    name_current_node, cost_node = queue.remove()
-                visited.append(name_current_node)
-
-                if (name_current_node in name_node_goal):
-                    reached_goal, cumulative_cost_goal = True, cost_node
-                    break
-
-                # get all successors of name_current_node
-                names_successors = graph.getSuccessors(name_current_node)
-
-                if names_successors:  # checks if contains successors
-                    # insert all successors of name_current_node in the queue
-                    for name_sucessor in names_successors:
-                        cumulative_cost = graph.getWeightEdge(name_current_node, name_sucessor) + cost_node
-                        queue.insert((name_sucessor, cumulative_cost), cumulative_cost)
-
-            if (reached_goal):
-                list = self.getPath(graph.nodes[name_current_node], name_node_start)
-                print('\nReached goal by UCS algorithm !! \nThe path is : {} \nCost : {}'.format(list,
-                                                                                                 cumulative_cost_goal))
-                print('The list of visited Nodes : {} \n'.format(visited))
+            # else and it to the visited and add its children to the fringe
 
             else:
-                print('\nUnfulfilled goal.\n')
+                for j in graph.nodes[n].children:
+                    if not (j.name in visited):
+                        fringe_dict[j.name] = [getPathCost(graph, getPath(j, j.name))]
+                        fringe_list.clear()
+        print('\nfailed to get the goal ')
+        return None
 
     # Greedy Search Algorithm :
     def greedy(self, graph, startNode, goalNodes):
+
+        # Checking if the start node and the goal node in the graph or not
+
         if startNode not in graph.getNodes():
             print('\nError: start Node \'{}\' not exists!!'.format(startNode))
             return
@@ -146,6 +162,10 @@ class Search():
             if (g not in graph.getNodes()):
                 print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
+
+        # Creating a object of class heuristics and calling function get huristics to calculate the h(x) of all nodes
+        # in graph
+
         h = Huristcis()
         h.getHuristic(graph, startNode, goalNodes)
         print("\nThe heuristic function of the graph is : {}".format(h.nodes))
@@ -155,12 +175,18 @@ class Search():
         while fringe_dict is not None:
             # Sorts the fringe according to the heuristics of node
             fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
-            list = fringe_dict.keys()
+
             fringe_list = []
-            for j in list:
+            for j in fringe_dict.keys():
                 fringe_list.append(j)
+
+            # accessing the names in fringe by using a list (fringe_list)
+
             n = fringe_list[0]
             del fringe_dict[n]
+            visited.append(n)
+
+
             if n in goalNodes:
                 path = self.getPath(graph.nodes[n], startNode)
                 print("Reached goal by Greedy algorithm !! \nThe path is : {}".format(path))
@@ -168,9 +194,8 @@ class Search():
                 print("The list of visited Nodes : {}".format(visited))
                 return
             else:
-                visited.append(n)
                 for j in graph.nodes[n].children:
-                    if not (j.name == visited):
+                    if not (j.name in visited):
                         fringe_dict[j.name] = [h.nodes[j.name]]
                         fringe_list.clear()
         print('\nfailed to get the goal ')
@@ -178,6 +203,9 @@ class Search():
 
         # Greedy Search Algorithm :
     def aStar (self, graph, startNode, goalNodes):
+
+        # Checking if the start node and the goal node in the graph or not
+
         if startNode not in graph.getNodes():
             print('\nError: start Node \'{}\' not exists!!'.format(startNode))
             return
@@ -185,6 +213,10 @@ class Search():
             if (g not in graph.getNodes()):
                 print('\nError: goal Node \'{}\' not exists!!'.format(g))
                 return
+
+        # creating an object from class Heuristics and calling f_of_X to calculate the summation of the H(x) and the
+        # G(x)
+
         h = Huristcis()
         h.F_of_X(graph, startNode, goalNodes)
         print("\nThe F(x) function of the graph is : {}".format(h.optimalCostNodes))
@@ -194,12 +226,14 @@ class Search():
         while fringe_dict is not None:
             # Sorts the fringe according to the heuristics of node
             fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
-            list = fringe_dict.keys()
+
             fringe_list = []
-            for j in list:
+            for j in fringe_dict.keys():
                 fringe_list.append(j)
             n = fringe_list[0]
             del fringe_dict[n]
+            visited.append(n)
+
             if n in goalNodes:
                 path = self.getPath(graph.nodes[n], startNode)
                 print("Reached goal by A* algorithm !! \nThe path is : {}".format(path))
@@ -207,9 +241,8 @@ class Search():
                 print("The list of visited Nodes : {}".format(visited))
                 return
             else:
-                visited.append(n)
                 for j in graph.nodes[n].children:
-                    if not (j.name == visited):
+                    if not (j.name in visited):
                         fringe_dict[j.name] = [h.nodes[j.name]]
                         fringe_list.clear()
         print('\nfailed to get the goal ')
@@ -219,16 +252,6 @@ class Search():
     #                   Extra functions :
     # ===========================================================
 
-    # Flipping the list to get the correct path from the start to the goal node/Nodes
-    def swap(self, list, left, right):
-        while not (left >= right):
-            temp = list[left]
-            list[left] = list[right]
-            list[right] = temp
-            left += 1
-            right -= 1
-        return list
-
     # Getting the path to the goal from the start
     def getPath(self, node, start):
         solList = []
@@ -236,7 +259,7 @@ class Search():
             solList.append(node.name)
             node = node.parent
         solList.append(node.name)
-        solList = self.swap(solList, 0, len(solList) - 1)
+        solList.reverse()
         return solList
 
     # Getting the cost of the path from the Start node to the goal node/Nodes

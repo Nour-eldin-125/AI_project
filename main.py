@@ -11,16 +11,20 @@ graph.addNode('F')
 graph.addNode('G')
 graph.addNode('H')
 graph.addNode('I')
+graph.addNode('T')
+graph.addNode('N')
 
 
-graph.connect('A' ,'B' ,2)
-graph.connect('A' ,'C' ,2)
-graph.connect('B' ,'D' ,2)
-graph.connect('B' ,'E' ,2)
-graph.connect('B' ,'I' ,2)
-graph.connect('C' ,'F' ,2)
-graph.connect('C' ,'G' ,2)
-graph.connect('G' ,'H' ,2)
+graph.connect('A' ,'B' ,3)
+graph.connect('A' ,'C' ,6)
+graph.connect('B' ,'D' ,4)
+graph.connect('B' ,'E' ,5)
+graph.connect('B' ,'I' ,8)
+graph.connect('C' ,'F' ,1)
+graph.connect('C' ,'G' ,9)
+graph.connect('G' ,'H' ,10)
+graph.connect('C' ,'T' ,2)
+graph.connect('I' ,'N' ,3)
 
 
 

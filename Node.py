@@ -99,37 +99,30 @@ class Graph():
         return self.nodes
 
 
-def ucs_search(graph, name_node_start, name_node_goal):
-    queue = PriorityQueue()
-    names_successors = graph.getSuccessors(name_node_start)
+def ucs_search(graph, startNode, goalNode):
 
-    for name_sucessor in names_successors:
-        weight = graph.getWeightEdge(name_node_start, name_sucessor)
-        queue.insert((name_sucessor, weight), weight)
+    fringe_dict = {startNode: 0}
+    visited = []
 
-    reached_goal, cumulative_cost_goal = False, -1
-    visited = [name_node_start]
-    while not queue.is_empty():
+    while len(fringe_dict) != 0:
+        # Sorts the fringe according to the cost of node
+        fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
+        fringe_list = []
+        for j in fringe_dict.keys():
+            fringe_list.append(j)
+        n = fringe_list[0]
+        del fringe_dict[n]
+        if n in goalNode:
+            path = getPath(graph.nodes[n], startNode)
+            return path
+        else:
+            visited.append(n)
+            for j in graph.nodes[n].children:
+                if not (j.name in visited):
+                    fringe_dict[j.name] = [getPathCost(graph,getPath(j,j.name))]
+                    fringe_list.clear()
+    return None
 
-        name_current_node, cost_node = queue.remove()
-        while name_current_node in visited:
-            name_current_node, cost_node = queue.remove()
-        visited.append(name_current_node)
-
-        if (name_current_node in name_node_goal):
-            reached_goal, cumulative_cost_goal = True, cost_node
-            break
-        names_successors = graph.getSuccessors(name_current_node)
-
-        if names_successors:  # checks if contains successors
-            for name_sucessor in names_successors:
-                cumulative_cost = graph.getWeightEdge(name_current_node, name_sucessor) + cost_node
-                queue.insert((name_sucessor, cumulative_cost), cumulative_cost)
-
-    if (reached_goal):
-        return getPath(graph.nodes[name_current_node],name_node_start)
-    else:
-        return None
 
 def getPath(node, start):
     solList = []
@@ -137,17 +130,9 @@ def getPath(node, start):
         solList.append(node.name)
         node = node.parent
     solList.append(node.name)
-    solList = swap(solList, 0, len(solList) - 1)
+    solList.reverse()
     return solList
 
-def swap(list, left, right):
-    while not (left >= right):
-        temp = list[left]
-        list[left] = list[right]
-        list[right] = temp
-        left += 1
-        right -= 1
-    return list
 
 # Getting the cost of the path from the Start node to the goal node/Nodes
 def getPathCost(graph, list):

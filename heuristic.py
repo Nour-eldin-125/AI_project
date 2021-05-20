@@ -8,15 +8,13 @@ class Huristcis():
         self.optimalCostNodes={}
 
     def getHuristic(self, graph:Graph, start, goal):
-        for g in goal:
-            graph.nodes[g].goal = True
         visited = []
         fringe = [start]
         while len(fringe) != 0:
             n = fringe[0]
             fringe.pop(0)
 
-            list=ucs_search(graph=graph,name_node_start= n,name_node_goal= goal)
+            list=ucs_search(graph,n,goal)
             if (list==None):
                 if n in goal:
                     self.nodes[n]=0

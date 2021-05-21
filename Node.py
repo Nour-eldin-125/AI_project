@@ -9,8 +9,7 @@ class Node():
         self.children = []
         self.parent = p
         self.weight_child = {}
-        self.goal = goal
-        self.huristics = None
+
 
     # Getting the child by its number
     def get_By_Num(self, child):
@@ -31,12 +30,14 @@ class Node():
                 return child
 
     # Adding a new child to the Node
-    def addChild(self, node, weight, goal=False):
+    def addChild(self, node, weight):
         # Adding none existing child
         if node.name not in self.weight_child:
             self.children.append(node)
             self.weight_child[node.name] = weight
-            node.parent = self
+            if(node.parent==None):
+                node.parent = self
+
 
     # Returning dictionary of all children with there weights
     def getWeightChildren(self):
@@ -124,11 +125,14 @@ def ucs_search(graph, startNode, goalNode):
     return None
 
 
-def getPath(node, start):
+def getPath(node:Node, start):
     solList = []
     while node.name != start:
         solList.append(node.name)
-        node = node.parent
+        if (node.parent == None):
+            break
+        else :
+            node=node.parent
     solList.append(node.name)
     solList.reverse()
     return solList

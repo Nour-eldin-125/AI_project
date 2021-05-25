@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">heuristic </span><span class="s0">import </span><span class="s1">*</span>
+<span class="s0">from </span><span class="s1">search_Algo </span><span class="s0">import </span><span class="s1">Search</span>
+
+<span class="s1">graph = Graph()</span>
+<span class="s1">graph.addNode(</span><span class="s2">'A'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'B'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'C'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'D'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'E'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'F'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'G'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'H'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'I'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'J'</span><span class="s1">)</span>
+<span class="s1">graph.addNode(</span><span class="s2">'K'</span><span class="s1">)</span>
+
+
+<span class="s1">graph.connect(</span><span class="s2">'A' </span><span class="s0">,</span><span class="s2">'B' </span><span class="s0">,</span><span class="s3">8</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'A' </span><span class="s0">,</span><span class="s2">'C' </span><span class="s0">,</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'A' </span><span class="s0">,</span><span class="s2">'D' </span><span class="s0">,</span><span class="s3">2</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'B' </span><span class="s0">,</span><span class="s2">'E' </span><span class="s0">,</span><span class="s3">3</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'E' </span><span class="s0">,</span><span class="s2">'B' </span><span class="s0">,</span><span class="s3">6</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'E' </span><span class="s0">,</span><span class="s2">'F' </span><span class="s0">,</span><span class="s3">11</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'C' </span><span class="s0">,</span><span class="s2">'E' </span><span class="s0">,</span><span class="s3">11</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'F' </span><span class="s0">,</span><span class="s2">'C' </span><span class="s0">,</span><span class="s3">5</span><span class="s1">)</span>
+
+<span class="s1">graph.connect(</span><span class="s2">'C' </span><span class="s0">,</span><span class="s2">'F' </span><span class="s0">,</span><span class="s3">2</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'F' </span><span class="s0">,</span><span class="s2">'G' </span><span class="s0">,</span><span class="s3">4</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'D' </span><span class="s0">,</span><span class="s2">'G' </span><span class="s0">,</span><span class="s3">6</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'D' </span><span class="s0">,</span><span class="s2">'H' </span><span class="s0">,</span><span class="s3">2</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'G' </span><span class="s0">,</span><span class="s2">'K' </span><span class="s0">,</span><span class="s3">4</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'E' </span><span class="s0">,</span><span class="s2">'I' </span><span class="s0">,</span><span class="s3">2</span><span class="s1">)</span>
+<span class="s1">graph.connect(</span><span class="s2">'E' </span><span class="s0">,</span><span class="s2">'J' </span><span class="s0">,</span><span class="s3">1</span><span class="s1">)</span>
+
+
+
+
+
+<span class="s1">s=Search()</span>
+<span class="s4"># s.greedy(graph,'A', ('F',&quot;K&quot;))</span>
+<span class="s4"># s.dfs(graph,'A', (&quot;J&quot;))</span>
+<span class="s1">s.ucs(graph</span><span class="s0">, </span><span class="s2">'A'</span><span class="s0">,</span><span class="s1">(</span><span class="s2">'J'</span><span class="s1">))</span>
+<span class="s4"># s.bfs(graph,'A', ('J'))</span>
+<span class="s4"># s.aStar(graph, 'A', ('F', &quot;K&quot;))</span></pre>
+</body>
+</html>

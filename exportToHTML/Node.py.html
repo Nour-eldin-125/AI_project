@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>Node.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Node.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">priority_queue </span><span class="s0">import </span><span class="s1">*</span>
+
+
+
+<span class="s0">class </span><span class="s1">Node():</span>
+
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">name):</span>
+        <span class="s1">self.name = name</span>
+        <span class="s1">self.children = []</span>
+        <span class="s1">self.parent = []</span>
+        <span class="s1">self.parentName=[]</span>
+        <span class="s1">self.weight_child = {}</span>
+
+
+    <span class="s2"># Getting the child by its number</span>
+    <span class="s0">def </span><span class="s1">get_By_Num(self</span><span class="s0">, </span><span class="s1">child):</span>
+        <span class="s0">return </span><span class="s1">self.children[child]</span>
+
+    <span class="s2"># Getting the parent of the node</span>
+    <span class="s0">def </span><span class="s1">get_Parent(self):</span>
+        <span class="s0">return </span><span class="s1">self.parent</span>
+
+    <span class="s2"># Get all the children</span>
+    <span class="s0">def </span><span class="s1">getChildren(self):</span>
+        <span class="s0">return </span><span class="s1">self.children</span>
+
+    <span class="s2"># Getting the child by it's name</span>
+    <span class="s0">def </span><span class="s1">getByName(self</span><span class="s0">, </span><span class="s1">data):</span>
+        <span class="s0">for </span><span class="s1">child </span><span class="s0">in </span><span class="s1">self.children:</span>
+            <span class="s0">if </span><span class="s1">child.name == data:</span>
+                <span class="s0">return </span><span class="s1">child</span>
+
+    <span class="s2"># Adding a new child to the Node</span>
+    <span class="s0">def </span><span class="s1">addChild(self</span><span class="s0">, </span><span class="s1">node</span><span class="s0">, </span><span class="s1">weight):</span>
+        <span class="s2"># Adding none existing child</span>
+        <span class="s0">if </span><span class="s1">node.name </span><span class="s0">not in </span><span class="s1">self.weight_child:</span>
+            <span class="s1">self.children.append(node)</span>
+            <span class="s1">self.weight_child[node.name] = weight</span>
+            <span class="s0">if </span><span class="s1">(len(node.parent)==</span><span class="s3">0</span><span class="s1">):</span>
+                <span class="s1">node.parent.append(self)</span>
+                <span class="s1">node.parentName.append(self.name)</span>
+            <span class="s0">elif </span><span class="s1">node </span><span class="s0">not in </span><span class="s1">self.parent:</span>
+                <span class="s1">node.parent.append(self)</span>
+                <span class="s1">node.parentName.append(self.name)</span>
+
+
+    <span class="s2"># Returning dictionary of all children with there weights</span>
+    <span class="s0">def </span><span class="s1">getWeightChildren(self):</span>
+        <span class="s0">return </span><span class="s1">self.weight_child</span>
+
+
+<span class="s0">class </span><span class="s1">Graph():</span>
+
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+        <span class="s1">self.nodes = {}</span>
+
+    <span class="s2"># Adding a non existing Node to graph</span>
+    <span class="s0">def </span><span class="s1">addNode(self</span><span class="s0">, </span><span class="s1">name):</span>
+        <span class="s0">if </span><span class="s1">name </span><span class="s0">in </span><span class="s1">self.nodes:</span>
+            <span class="s1">print(</span><span class="s4">'Error: Name {} already exists in nodes !!'</span><span class="s1">.format(name))</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">node = Node(name)  </span><span class="s2"># creates a instance of Node</span>
+            <span class="s1">self.nodes[name] = node  </span><span class="s2"># stores the node</span>
+
+    <span class="s2"># connects the nodes</span>
+    <span class="s0">def </span><span class="s1">connect(self</span><span class="s0">, </span><span class="s1">sourceNode</span><span class="s0">, </span><span class="s1">destinationNode</span><span class="s0">, </span><span class="s1">weight):</span>
+        <span class="s2"># checks if the name already exists in the graph</span>
+        <span class="s0">if </span><span class="s1">sourceNode </span><span class="s0">in </span><span class="s1">self.nodes </span><span class="s0">and </span><span class="s1">destinationNode </span><span class="s0">in </span><span class="s1">self.nodes:</span>
+            <span class="s0">if </span><span class="s1">sourceNode != destinationNode:  </span><span class="s2"># checks if the names are different</span>
+                <span class="s0">if </span><span class="s1">weight &gt; </span><span class="s3">0</span><span class="s1">:  </span><span class="s2"># checks if the weight is positive</span>
+                    <span class="s2"># connects the nodes</span>
+                    <span class="s1">self.nodes[sourceNode].addChild(self.nodes[destinationNode]</span><span class="s0">, </span><span class="s1">weight)</span>
+                <span class="s0">else</span><span class="s1">:</span>
+                    <span class="s1">print(</span><span class="s4">'Error: weight negative !!'</span><span class="s1">)</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">print(</span><span class="s4">'Error: same Names !!'</span><span class="s1">)</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">print(</span><span class="s4">'Error: Names do not exist !!'</span><span class="s1">)</span>
+
+    <span class="s2"># returns weight of edge</span>
+    <span class="s0">def </span><span class="s1">getWeightEdge(self</span><span class="s0">, </span><span class="s1">sourceName</span><span class="s0">, </span><span class="s1">childName):</span>
+        <span class="s0">if </span><span class="s1">sourceName </span><span class="s0">in </span><span class="s1">self.nodes </span><span class="s0">and </span><span class="s1">childName </span><span class="s0">in </span><span class="s1">self.nodes:  </span><span class="s2"># checks if the Names exists</span>
+            <span class="s0">if </span><span class="s1">sourceName != childName:  </span><span class="s2"># checks if the Names are different</span>
+                <span class="s1">weight_child = self.nodes[sourceName].getWeightChildren()</span>
+                <span class="s0">if </span><span class="s1">childName </span><span class="s0">in </span><span class="s1">weight_child:  </span><span class="s2"># checks if childName is a successor</span>
+                    <span class="s0">return </span><span class="s1">weight_child[childName]  </span><span class="s2"># returns the weight</span>
+                <span class="s0">else</span><span class="s1">:</span>
+                    <span class="s1">print(</span><span class="s4">'Error: child does not exists!!'</span><span class="s1">)</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">print(</span><span class="s4">'Error: same Names !!'</span><span class="s1">)</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">print(</span><span class="s4">'Error: Names do not exist !!'</span><span class="s1">)</span>
+
+    <span class="s2"># returns the keys of all successors of a node</span>
+    <span class="s0">def </span><span class="s1">getSuccessors(self</span><span class="s0">, </span><span class="s1">node_Name):</span>
+        <span class="s0">if </span><span class="s1">node_Name </span><span class="s0">in </span><span class="s1">self.nodes:</span>
+            <span class="s1">nodes = self.nodes[node_Name].getChildren()</span>
+            <span class="s1">node_children = [node.name </span><span class="s0">for </span><span class="s1">node </span><span class="s0">in </span><span class="s1">nodes]</span>
+            <span class="s0">return </span><span class="s1">node_children</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">print(</span><span class="s4">'Error: Name does not exist !!'</span><span class="s1">)</span>
+
+    <span class="s2"># returns all nodes</span>
+    <span class="s0">def </span><span class="s1">getNodes(self):</span>
+        <span class="s0">return </span><span class="s1">self.nodes</span>
+
+
+<span class="s0">def </span><span class="s1">ucs_search(graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNode):</span>
+
+    <span class="s1">fringe_dict = {startNode: </span><span class="s3">0</span><span class="s1">}</span>
+    <span class="s1">visited = []</span>
+
+    <span class="s0">while </span><span class="s1">len(fringe_dict) != </span><span class="s3">0</span><span class="s1">:</span>
+        <span class="s2"># Sorts the fringe according to the cost of node</span>
+        <span class="s1">fringe_dict = {k: v </span><span class="s0">for </span><span class="s1">k</span><span class="s0">, </span><span class="s1">v </span><span class="s0">in </span><span class="s1">sorted(fringe_dict.items()</span><span class="s0">, </span><span class="s1">key=</span><span class="s0">lambda </span><span class="s1">item: item[</span><span class="s3">1</span><span class="s1">])}</span>
+        <span class="s1">fringe_list = []</span>
+        <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">fringe_dict.keys():</span>
+            <span class="s1">fringe_list.append(j)</span>
+        <span class="s1">n = fringe_list[</span><span class="s3">0</span><span class="s1">]</span>
+        <span class="s0">del </span><span class="s1">fringe_dict[n]</span>
+        <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goalNode:</span>
+            <span class="s1">path = getPath(graph.nodes[n]</span><span class="s0">, </span><span class="s1">startNode)</span>
+            <span class="s0">return </span><span class="s1">path</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">visited.append(n)</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">graph.nodes[n].children:</span>
+                <span class="s0">if not </span><span class="s1">(j.name </span><span class="s0">in </span><span class="s1">visited):</span>
+                    <span class="s1">fringe_dict[j.name] = getPathCost(graph</span><span class="s0">,</span><span class="s1">getPath(j</span><span class="s0">,</span><span class="s1">j.name))</span>
+                    <span class="s1">fringe_list.clear()</span>
+    <span class="s0">return None</span>
+
+
+<span class="s0">def </span><span class="s1">getPath(node:Node</span><span class="s0">, </span><span class="s1">start):</span>
+    <span class="s1">solList = []</span>
+    <span class="s0">while </span><span class="s1">node.name != start:</span>
+        <span class="s1">solList.append(node.name)</span>
+        <span class="s1">node=node.parent</span>
+    <span class="s1">solList.append(node.name)</span>
+    <span class="s1">solList.reverse()</span>
+    <span class="s0">return </span><span class="s1">solList</span>
+
+
+<span class="s2"># Getting the cost of the path from the Start node to the goal node/Nodes</span>
+<span class="s0">def </span><span class="s1">getPathCost(graph</span><span class="s0">, </span><span class="s1">list):</span>
+    <span class="s1">cost = </span><span class="s3">0</span>
+    <span class="s0">for </span><span class="s1">x </span><span class="s0">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s0">, </span><span class="s1">len(list) - </span><span class="s3">1</span><span class="s1">):</span>
+        <span class="s1">cost += graph.getWeightEdge(list[x]</span><span class="s0">, </span><span class="s1">list[x + </span><span class="s3">1</span><span class="s1">])</span>
+    <span class="s0">return </span><span class="s1">cost</span></pre>
+</body>
+</html>

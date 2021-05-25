@@ -11,28 +11,52 @@ graph.addNode('F')
 graph.addNode('G')
 graph.addNode('H')
 graph.addNode('I')
+graph.addNode('J')
+graph.addNode('K')
 
 
 graph.connect('A' ,'B' ,8)
 graph.connect('A' ,'C' ,1)
 graph.connect('A' ,'D' ,2)
 graph.connect('B' ,'E' ,3)
-# graph.connect('E' ,'B' ,6)
-# graph.connect('E' ,'F' ,11)
-graph.connect('C' ,'F' ,4)
+graph.connect('E' ,'B' ,6)
+graph.connect('E' ,'F' ,11)
+graph.connect('C' ,'E' ,11)
+
 graph.connect('F' ,'C' ,5)
+
+graph.connect('C' ,'F' ,2)
+
+
+
 graph.connect('F' ,'G' ,4)
-graph.connect('F' ,'H' ,4)
-graph.connect('C' ,'I' ,4)
-graph.connect('I' ,'C' ,4)
+graph.connect('D' ,'G' ,6)
+graph.connect('D' ,'H' ,2)
+graph.connect('G' ,'K' ,4)
+graph.connect('E' ,'I' ,2)
+graph.connect('E' ,'J' ,1)
 
 
 
 
 
 s=Search()
-s.greedy(graph,'A', ('F',"H"))
-s.dfs(graph,'A', ('E',"I"))
-s.ucs(graph, 'B',('E',"I"))
-s.bfs(graph,'A', ('F',"H"))
-s.aStar(graph, 'A', ('F', "H"))
+list ={
+    'A': 4,
+    'B': 3,
+    'C': 4,
+    'D': 9,
+    'E': 1,
+    'I': 1,
+    'J': 0,
+    'F': 7,
+    'G': 3,
+    'H': 1,
+    'K': 0
+}
+
+# s.dfs(graph,'A', ("E"))
+s.ucs(graph, 'A',('J','K'))
+# s.bfs(graph,'A', ('J','E'))
+# s.greedy(graph,'A', ('J','K'),list)
+s.aStar(graph, 'A', ('J', "K"),list)

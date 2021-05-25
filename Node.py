@@ -1,13 +1,10 @@
-from priority_queue import *
-
-
-
 class Node():
 
-    def __init__(self, name, p=None, goal=False):
+    def __init__(self, name):
         self.name = name
         self.children = []
-        self.parent = p
+        self.parent = []
+        self.parentName=[]
         self.weight_child = {}
 
 
@@ -35,9 +32,9 @@ class Node():
         if node.name not in self.weight_child:
             self.children.append(node)
             self.weight_child[node.name] = weight
-            if(node.parent==None):
-                node.parent = self
 
+            node.parent.append(self)
+            node.parentName.append(self.name)
 
     # Returning dictionary of all children with there weights
     def getWeightChildren(self):
@@ -100,47 +97,50 @@ class Graph():
         return self.nodes
 
 
-def ucs_search(graph, startNode, goalNode):
-
+def ucs( graph, startNode, goalNode):
     fringe_dict = {startNode: 0}
-    visited = []
+    visited = {}
 
     while len(fringe_dict) != 0:
-        # Sorts the fringe according to the cost of node
         fringe_dict = {k: v for k, v in sorted(fringe_dict.items(), key=lambda item: item[1])}
-        fringe_list = []
-        for j in fringe_dict.keys():
-            fringe_list.append(j)
-        n = fringe_list[0]
-        del fringe_dict[n]
-        if n in goalNode:
-            path = getPath(graph.nodes[n], startNode)
-            return path
+
+        list = []
+        for l in fringe_dict.keys():
+            list.append(l)
+        item = list[0]
+        cost = fringe_dict[item]
+        fringe_dict.pop(item)
+        visited[item] = cost
+        v = []
+        for visit in visited.keys():
+            v.append(visit)
+        if (item in goalNode):
+
+            return visited
+
         else:
-            visited.append(n)
-            for j in graph.nodes[n].children:
-                if not (j.name in visited):
-                    fringe_dict[j.name] = [getPathCost(graph,getPath(j,j.name))]
-                    fringe_list.clear()
-    return None
+            for i in graph.nodes[item].children:
+                if (i.name not in v):
+                    if (i.name in fringe_dict):
+                        if fringe_dict[i.name] > graph.getWeightEdge(item, i.name) + cost:
+                            fringe_dict[i.name] = graph.getWeightEdge(item, i.name) + cost
+                    else:
+                        fringe_dict[i.name] = graph.getWeightEdge(item, i.name) + cost
+            list.clear()
+        return None
 
 
-def getPath(node:Node, start):
+def getPathUCS(self, graph: Graph, startNode, start, visited: {}):
     solList = []
-    while node.name != start:
-        solList.append(node.name)
-        if (node.parent == None):
-            break
-        else :
-            node=node.parent
-    solList.append(node.name)
+    v = len(visited) - 2
+    while startNode.name != start:
+        solList.append(startNode.name)
+        min = 9999
+        for p in startNode.parent:
+            if (min > visited[p.name] + graph.getWeightEdge(p.name, startNode.name)):
+                min = visited[p.name]
+                temp = p
+        startNode = temp
+    solList.append(startNode.name)
     solList.reverse()
     return solList
-
-
-# Getting the cost of the path from the Start node to the goal node/Nodes
-def getPathCost(graph, list):
-    cost = 0
-    for x in range(0, len(list) - 1):
-        cost += graph.getWeightEdge(list[x], list[x + 1])
-    return cost

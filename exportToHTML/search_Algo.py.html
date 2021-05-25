@@ -1,0 +1,341 @@
+<html>
+<head>
+<title>search_Algo.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+search_Algo.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">Node </span><span class="s0">import </span><span class="s1">*</span>
+<span class="s0">from </span><span class="s1">heuristic </span><span class="s0">import </span><span class="s1">Huristcis</span>
+
+
+<span class="s0">class </span><span class="s1">Search():</span>
+
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+        <span class="s0">pass</span>
+
+    <span class="s2"># Dfs Search Algorithm :</span>
+    <span class="s0">def </span><span class="s1">dfs(self</span><span class="s0">, </span><span class="s1">graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNode):</span>
+
+        <span class="s0">if</span><span class="s1">(startNode </span><span class="s0">in </span><span class="s1">goalNode):</span>
+            <span class="s0">return </span><span class="s1">startNode</span>
+
+        <span class="s2"># Checking if the start node and the goal node in the graph or not</span>
+
+        <span class="s0">if </span><span class="s1">startNode </span><span class="s0">not in </span><span class="s1">graph.getNodes():</span>
+            <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: start Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(startNode))</span>
+            <span class="s0">return</span>
+        <span class="s0">for </span><span class="s1">g </span><span class="s0">in </span><span class="s1">goalNode:</span>
+            <span class="s0">if </span><span class="s1">(g </span><span class="s0">not in </span><span class="s1">graph.nodes):</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: goal Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(g))</span>
+                <span class="s0">return</span>
+
+        <span class="s2"># Creating the visited and the fringe lists</span>
+
+        <span class="s1">visited = []</span>
+        <span class="s1">fringe = [startNode]</span>
+        <span class="s0">while </span><span class="s1">len(fringe) != </span><span class="s4">0</span><span class="s1">:</span>
+            <span class="s1">x = len(fringe) - </span><span class="s4">1</span>
+            <span class="s1">n = fringe[x]</span>
+            <span class="s1">fringe.pop(x)</span>
+            <span class="s1">visited.append(n)</span>
+
+        <span class="s2"># if this node is the goal then print the path to the node and the cost to reach it</span>
+
+            <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goalNode:</span>
+                <span class="s1">solList=self.getPath(graph</span><span class="s0">,</span><span class="s1">graph.nodes[n]</span><span class="s0">,</span><span class="s1">startNode</span><span class="s0">,</span><span class="s1">visited)</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Reached goal by DFS algorithm !! </span><span class="s0">\n</span><span class="s3">The path is : {}'</span><span class="s1">.format(solList))</span>
+                <span class="s2"># getting a list of names of the visited nodes</span>
+                <span class="s1">print(</span><span class="s3">'Cost : {}</span><span class="s0">\n</span><span class="s3">The list of visited Nodes : {}</span><span class="s0">\n</span><span class="s3">'</span><span class="s1">.format(self.getPathCost(graph</span><span class="s0">, </span><span class="s1">solList)</span><span class="s0">, </span><span class="s1">visited))</span>
+                <span class="s0">return</span>
+
+            <span class="s2"># else append the node to the visited list and add its children to the fringe</span>
+
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">c </span><span class="s0">in </span><span class="s1">graph.nodes[n].children:</span>
+                    <span class="s0">if </span><span class="s1">c.name </span><span class="s0">not in </span><span class="s1">visited:</span>
+                        <span class="s1">fringe.append(c.name)</span>
+        <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">DFS failed to get the goal'</span><span class="s1">)</span>
+        <span class="s0">return</span>
+
+    <span class="s2"># Bfs Search Algorithm :</span>
+    <span class="s0">def </span><span class="s1">bfs(self</span><span class="s0">, </span><span class="s1">graph:Graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNode):</span>
+
+        <span class="s2"># Checking if the start node and the goal node in the graph or not</span>
+
+        <span class="s0">if </span><span class="s1">startNode </span><span class="s0">not in </span><span class="s1">graph.nodes:</span>
+            <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: startNode </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(startNode))</span>
+            <span class="s0">return</span>
+        <span class="s0">for </span><span class="s1">g </span><span class="s0">in </span><span class="s1">goalNode:</span>
+            <span class="s0">if </span><span class="s1">g </span><span class="s0">not in </span><span class="s1">graph.nodes:</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: goal Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(g))</span>
+                <span class="s0">return</span>
+
+        <span class="s2"># Creating the visited and the fringe lists</span>
+        <span class="s1">visited = []</span>
+        <span class="s1">fringe = [startNode]</span>
+        <span class="s0">while </span><span class="s1">len(fringe) != </span><span class="s4">0</span><span class="s1">:</span>
+            <span class="s1">n = fringe[</span><span class="s4">0</span><span class="s1">]</span>
+            <span class="s1">fringe.pop(</span><span class="s4">0</span><span class="s1">)</span>
+            <span class="s1">visited.append(n)</span>
+
+            <span class="s2"># if this node is the goal then print the path to the node and the cost to reach it</span>
+            <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goalNode:</span>
+
+                <span class="s1">solList = self.getPathBfs(graph</span><span class="s0">,</span><span class="s1">graph.nodes[n]</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">,</span><span class="s1">visited)</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Reached goal by BFS algorithm !! </span><span class="s0">\n</span><span class="s3">The path is : {}'</span><span class="s1">.format(solList))</span>
+                <span class="s2"># # Getting a list of names of the visited nodes</span>
+                <span class="s2">#</span>
+                <span class="s1">print(</span><span class="s3">'Cost : {}</span><span class="s0">\n</span><span class="s3">The list of visited Nodes : {}</span><span class="s0">\n</span><span class="s3">'</span><span class="s1">.format(self.getPathCost(graph</span><span class="s0">, </span><span class="s1">solList)</span><span class="s0">, </span><span class="s1">visited))</span>
+
+                <span class="s0">return</span>
+
+            <span class="s2"># else append the node to the visited list and add its children to the fringe</span>
+
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">c </span><span class="s0">in </span><span class="s1">graph.nodes[n].children:</span>
+                    <span class="s0">if </span><span class="s1">(c.name </span><span class="s0">not in </span><span class="s1">visited) </span><span class="s0">and </span><span class="s1">(c.name </span><span class="s0">not in </span><span class="s1">fringe):</span>
+                        <span class="s1">fringe.append(c.name)</span>
+
+        <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">BFS failed to get the goal'</span><span class="s1">)</span>
+        <span class="s0">return</span>
+
+    <span class="s2"># Ucs search Algorithm :</span>
+    <span class="s0">def </span><span class="s1">ucs(self</span><span class="s0">, </span><span class="s1">graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNode):</span>
+        <span class="s1">fringe_dict={startNode: </span><span class="s4">0</span><span class="s1">}</span>
+        <span class="s1">visited={}</span>
+        <span class="s1">count=</span><span class="s4">0</span>
+        <span class="s0">while </span><span class="s1">len(fringe_dict)!=</span><span class="s4">0</span><span class="s1">:</span>
+            <span class="s1">fringe_dict = {k: v </span><span class="s0">for </span><span class="s1">k</span><span class="s0">, </span><span class="s1">v </span><span class="s0">in </span><span class="s1">sorted(fringe_dict.items()</span><span class="s0">, </span><span class="s1">key=</span><span class="s0">lambda </span><span class="s1">item: item[</span><span class="s4">1</span><span class="s1">])}</span>
+
+            <span class="s1">list = []</span>
+            <span class="s0">for </span><span class="s1">l </span><span class="s0">in </span><span class="s1">fringe_dict.keys():</span>
+                <span class="s1">list.append(l)</span>
+            <span class="s1">item = list[</span><span class="s4">0</span><span class="s1">]</span>
+            <span class="s1">cost = fringe_dict[item]</span>
+            <span class="s1">fringe_dict.pop(item)</span>
+            <span class="s1">visited[item] = cost</span>
+            <span class="s1">v=[]</span>
+            <span class="s0">for </span><span class="s1">visit </span><span class="s0">in </span><span class="s1">visited.keys():</span>
+                <span class="s1">v.append(visit)</span>
+            <span class="s0">if </span><span class="s1">(item </span><span class="s0">in </span><span class="s1">goalNode):</span>
+                <span class="s1">print(</span><span class="s3">'goal is : {}'</span><span class="s1">.format(item))</span>
+                <span class="s1">print(</span><span class="s3">'cost is : {}'</span><span class="s1">.format(cost))</span>
+                <span class="s1">print(</span><span class="s3">'path is : {}'</span><span class="s1">.format(self.getPathUCS(graph</span><span class="s0">,</span><span class="s1">graph.nodes[goalNode]</span><span class="s0">,</span><span class="s1">startNode</span><span class="s0">,</span><span class="s1">visited)))</span>
+                <span class="s1">print(</span><span class="s3">'Visited Nodes are : {}'</span><span class="s1">.format(visited))</span>
+                <span class="s0">return</span>
+
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">graph.nodes[item].children:</span>
+                    <span class="s0">if </span><span class="s1">(i.name </span><span class="s0">not in </span><span class="s1">v):</span>
+                        <span class="s0">if </span><span class="s1">(i.name </span><span class="s0">in </span><span class="s1">fringe_dict):</span>
+                            <span class="s0">if </span><span class="s1">fringe_dict[i.name]&gt;graph.getWeightEdge(item</span><span class="s0">, </span><span class="s1">i.name) + cost:</span>
+                                <span class="s1">fringe_dict[i.name] = graph.getWeightEdge(item</span><span class="s0">, </span><span class="s1">i.name) + cost</span>
+                        <span class="s0">else</span><span class="s1">:</span>
+                            <span class="s1">fringe_dict[i.name] = graph.getWeightEdge(item</span><span class="s0">, </span><span class="s1">i.name) + cost</span>
+                <span class="s1">list.clear()</span>
+        <span class="s1">print(</span><span class="s3">'failed to get the goal.'</span><span class="s1">)</span>
+
+
+    <span class="s2"># Greedy Search Algorithm :</span>
+
+    <span class="s0">def </span><span class="s1">greedy(self</span><span class="s0">, </span><span class="s1">graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNodes):</span>
+
+        <span class="s2"># Checking if the start node and the goal node in the graph or not</span>
+
+        <span class="s0">if </span><span class="s1">startNode </span><span class="s0">not in </span><span class="s1">graph.getNodes():</span>
+            <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: start Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(startNode))</span>
+            <span class="s0">return</span>
+        <span class="s0">for </span><span class="s1">g </span><span class="s0">in </span><span class="s1">goalNodes:</span>
+            <span class="s0">if </span><span class="s1">(g </span><span class="s0">not in </span><span class="s1">graph.getNodes()):</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: goal Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(g))</span>
+                <span class="s0">return</span>
+
+        <span class="s2"># Creating a object of class heuristics and calling function get heuristics to calculate the h(x) of all nodes</span>
+        <span class="s2"># in graph</span>
+
+        <span class="s1">h = Huristcis()</span>
+        <span class="s1">h.getHuristic(graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNodes)</span>
+        <span class="s1">print(</span><span class="s3">&quot;</span><span class="s0">\n</span><span class="s3">The heuristic function of the graph is : {}&quot;</span><span class="s1">.format(h.nodes))</span>
+        <span class="s1">fringe_dict = {startNode: h.nodes[startNode]}</span>
+        <span class="s1">visited = {}</span>
+
+        <span class="s0">while </span><span class="s1">fringe_dict </span><span class="s0">is not None</span><span class="s1">:</span>
+            <span class="s2"># Sorts the fringe according to the heuristics of node</span>
+            <span class="s1">fringe_dict = {k: v </span><span class="s0">for </span><span class="s1">k</span><span class="s0">, </span><span class="s1">v </span><span class="s0">in </span><span class="s1">sorted(fringe_dict.items()</span><span class="s0">, </span><span class="s1">key=</span><span class="s0">lambda </span><span class="s1">item: item[</span><span class="s4">1</span><span class="s1">])}</span>
+
+            <span class="s1">fringe_list = []</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">fringe_dict.keys():</span>
+                <span class="s1">fringe_list.append(j)</span>
+
+            <span class="s2"># accessing the names in fringe by using a list (fringe_list)</span>
+
+            <span class="s1">n = fringe_list[</span><span class="s4">0</span><span class="s1">]</span>
+            <span class="s0">del </span><span class="s1">fringe_dict[n]</span>
+            <span class="s1">visited.append(n)</span>
+
+
+            <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goalNodes:</span>
+                <span class="s1">path = self.getPath_H_of_X(graph.nodes[n]</span><span class="s0">, </span><span class="s1">startNode)</span>
+                <span class="s1">print(</span><span class="s3">&quot;Reached goal by Greedy algorithm !! </span><span class="s0">\n</span><span class="s3">The path is : {}&quot;</span><span class="s1">.format(path))</span>
+                <span class="s1">print(</span><span class="s3">&quot;Cost : {}&quot;</span><span class="s1">.format(self.getPathCost(graph</span><span class="s0">, </span><span class="s1">path)))</span>
+                <span class="s1">print(</span><span class="s3">&quot;The list of visited Nodes : {}&quot;</span><span class="s1">.format(visited))</span>
+                <span class="s0">return</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">graph.nodes[n].children:</span>
+                    <span class="s0">if </span><span class="s1">(i.name </span><span class="s0">not in </span><span class="s1">visited.keys()):</span>
+                        <span class="s0">if </span><span class="s1">(i.name </span><span class="s0">in </span><span class="s1">fringe_dict):</span>
+                            <span class="s0">if </span><span class="s1">fringe_dict[i.name] &gt; [h.nodes[j.name]]:</span>
+                                <span class="s1">fringe_dict[i.name] = [h.nodes[j.name]]</span>
+                        <span class="s0">else</span><span class="s1">:</span>
+                            <span class="s1">fringe_dict[i.name] = [h.nodes[j.name]]</span>
+                <span class="s1">fringe_list.clear()</span>
+        <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">failed to get the goal '</span><span class="s1">)</span>
+        <span class="s0">return</span>
+
+        <span class="s2"># Greedy Search Algorithm :</span>
+    <span class="s0">def </span><span class="s1">aStar (self</span><span class="s0">, </span><span class="s1">graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNodes):</span>
+
+        <span class="s2"># Checking if the start node and the goal node in the graph or not</span>
+
+        <span class="s0">if </span><span class="s1">startNode </span><span class="s0">not in </span><span class="s1">graph.getNodes():</span>
+            <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: start Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(startNode))</span>
+            <span class="s0">return</span>
+        <span class="s0">for </span><span class="s1">g </span><span class="s0">in </span><span class="s1">goalNodes:</span>
+            <span class="s0">if </span><span class="s1">(g </span><span class="s0">not in </span><span class="s1">graph.getNodes()):</span>
+                <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">Error: goal Node </span><span class="s0">\'</span><span class="s3">{}</span><span class="s0">\' </span><span class="s3">not exists!!'</span><span class="s1">.format(g))</span>
+                <span class="s0">return</span>
+
+        <span class="s2"># creating an object from class Heuristics and calling f_of_X to calculate the summation of the H(x) and the</span>
+        <span class="s2"># G(x)</span>
+
+        <span class="s1">h = Huristcis()</span>
+        <span class="s1">h.F_of_X(graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">goalNodes)</span>
+        <span class="s1">print(</span><span class="s3">&quot;</span><span class="s0">\n</span><span class="s3">The F(x) function of the graph is : {}&quot;</span><span class="s1">.format(h.optimalCostNodes))</span>
+        <span class="s1">fringe_dict = {startNode: h.optimalCostNodes[startNode]}</span>
+        <span class="s1">visited = []</span>
+
+        <span class="s0">while </span><span class="s1">fringe_dict </span><span class="s0">is not None</span><span class="s1">:</span>
+            <span class="s2"># Sorts the fringe according to the heuristics of node</span>
+            <span class="s1">fringe_dict = {k: v </span><span class="s0">for </span><span class="s1">k</span><span class="s0">, </span><span class="s1">v </span><span class="s0">in </span><span class="s1">sorted(fringe_dict.items()</span><span class="s0">, </span><span class="s1">key=</span><span class="s0">lambda </span><span class="s1">item: item[</span><span class="s4">1</span><span class="s1">])}</span>
+
+            <span class="s1">fringe_list = []</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">fringe_dict.keys():</span>
+                <span class="s1">fringe_list.append(j)</span>
+            <span class="s1">n = fringe_list[</span><span class="s4">0</span><span class="s1">]</span>
+            <span class="s0">del </span><span class="s1">fringe_dict[n]</span>
+            <span class="s1">visited.append(n)</span>
+
+            <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goalNodes:</span>
+                <span class="s1">path = self.getPath(graph.nodes[n]</span><span class="s0">, </span><span class="s1">startNode)</span>
+                <span class="s1">print(</span><span class="s3">&quot;Reached goal by A* algorithm !! </span><span class="s0">\n</span><span class="s3">The path is : {}&quot;</span><span class="s1">.format(path))</span>
+                <span class="s1">print(</span><span class="s3">&quot;Cost : {}&quot;</span><span class="s1">.format(self.getPathCost(graph</span><span class="s0">, </span><span class="s1">path)))</span>
+                <span class="s1">print(</span><span class="s3">&quot;The list of visited Nodes : {}&quot;</span><span class="s1">.format(visited))</span>
+                <span class="s0">return</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">graph.nodes[n].children:</span>
+                    <span class="s0">if not </span><span class="s1">(j.name </span><span class="s0">in </span><span class="s1">visited):</span>
+                        <span class="s1">fringe_dict[j.name] = [h.nodes[j.name]]</span>
+                        <span class="s1">fringe_list.clear()</span>
+        <span class="s1">print(</span><span class="s3">'</span><span class="s0">\n</span><span class="s3">failed to get the goal '</span><span class="s1">)</span>
+        <span class="s0">return</span>
+
+    <span class="s2"># ===========================================================</span>
+    <span class="s2">#                   Extra functions :</span>
+    <span class="s2"># ===========================================================</span>
+
+    <span class="s2"># Getting the path to the goal from the start</span>
+    <span class="s0">def </span><span class="s1">getPath(self</span><span class="s0">,</span><span class="s1">graph:Graph</span><span class="s0">, </span><span class="s1">node</span><span class="s0">, </span><span class="s1">start</span><span class="s0">,</span><span class="s1">visited:[]):</span>
+        <span class="s1">solList = []</span>
+        <span class="s1">v=len(visited)-</span><span class="s4">2</span>
+        <span class="s0">while </span><span class="s1">node.name != start:</span>
+            <span class="s1">solList.append(node.name)</span>
+            <span class="s1">c=</span><span class="s4">0</span>
+            <span class="s0">while </span><span class="s1">v &gt;= </span><span class="s4">0</span><span class="s1">:</span>
+                <span class="s0">if </span><span class="s1">visited[v] </span><span class="s0">in </span><span class="s1">node.parentName:</span>
+                    <span class="s1">node=graph.nodes[visited[v]]</span>
+                    <span class="s1">c=v</span>
+                    <span class="s0">break</span>
+                <span class="s1">v-=</span><span class="s4">1</span>
+            <span class="s1">v=c</span>
+        <span class="s1">solList.append(node.name)</span>
+        <span class="s1">solList.reverse()</span>
+        <span class="s0">return </span><span class="s1">solList</span>
+
+    <span class="s0">def </span><span class="s1">getPathBfs(self</span><span class="s0">, </span><span class="s1">graph: Graph</span><span class="s0">, </span><span class="s1">node</span><span class="s0">, </span><span class="s1">start</span><span class="s0">, </span><span class="s1">visited: []):</span>
+        <span class="s1">solList = []</span>
+        <span class="s0">while </span><span class="s1">node.name != start:</span>
+            <span class="s1">solList.append(node.name)</span>
+            <span class="s0">for </span><span class="s1">v </span><span class="s0">in </span><span class="s1">visited:</span>
+                <span class="s0">if </span><span class="s1">(v </span><span class="s0">in </span><span class="s1">node.parentName):</span>
+                    <span class="s1">node = graph.nodes[v]</span>
+                    <span class="s0">break</span>
+        <span class="s1">solList.append(node.name)</span>
+        <span class="s1">solList.reverse()</span>
+        <span class="s0">return </span><span class="s1">solList</span>
+
+    <span class="s0">def </span><span class="s1">getPathUCS(self</span><span class="s0">, </span><span class="s1">graph: Graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">start</span><span class="s0">, </span><span class="s1">visited: {}):</span>
+        <span class="s1">solList = []</span>
+        <span class="s1">v = len(visited) - </span><span class="s4">2</span>
+        <span class="s0">while </span><span class="s1">startNode.name != start:</span>
+            <span class="s1">solList.append(startNode.name)</span>
+            <span class="s1">min = </span><span class="s4">9999</span>
+            <span class="s0">for </span><span class="s1">p </span><span class="s0">in </span><span class="s1">startNode.parent:</span>
+                <span class="s0">if </span><span class="s1">(min&gt;visited[p.name]+graph.getWeightEdge(p.name</span><span class="s0">,</span><span class="s1">startNode.name)):</span>
+                    <span class="s1">min=visited[p.name]</span>
+                    <span class="s1">temp=p</span>
+            <span class="s1">startNode=temp</span>
+        <span class="s1">solList.append(startNode.name)</span>
+        <span class="s1">solList.reverse()</span>
+        <span class="s0">return </span><span class="s1">solList</span>
+
+    <span class="s0">def </span><span class="s1">getPath_H_of_X(self</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">start</span><span class="s0">, </span><span class="s1">visited: {}):</span>
+        <span class="s1">solList = []</span>
+        <span class="s1">v = len(visited) - </span><span class="s4">2</span>
+        <span class="s0">while </span><span class="s1">startNode.name != start:</span>
+            <span class="s1">solList.append(startNode.name)</span>
+            <span class="s1">min = </span><span class="s4">9999</span>
+            <span class="s0">for </span><span class="s1">p </span><span class="s0">in </span><span class="s1">startNode.parent:</span>
+                <span class="s0">if </span><span class="s1">(min&gt;visited[p.name]):</span>
+                    <span class="s1">min=visited[p.name]</span>
+                    <span class="s1">temp=p</span>
+            <span class="s1">startNode=temp</span>
+        <span class="s1">solList.append(startNode.name)</span>
+        <span class="s1">solList.reverse()</span>
+        <span class="s0">return </span><span class="s1">solList</span>
+
+    <span class="s0">def </span><span class="s1">getPath_F_of_X(self</span><span class="s0">, </span><span class="s1">graph: Graph</span><span class="s0">, </span><span class="s1">startNode</span><span class="s0">, </span><span class="s1">start</span><span class="s0">, </span><span class="s1">visited: {}):</span>
+        <span class="s1">solList = []</span>
+        <span class="s1">v = len(visited) - </span><span class="s4">2</span>
+        <span class="s0">while </span><span class="s1">startNode.name != start:</span>
+            <span class="s1">solList.append(startNode.name)</span>
+            <span class="s1">min = </span><span class="s4">9999</span>
+            <span class="s0">for </span><span class="s1">p </span><span class="s0">in </span><span class="s1">startNode.parent:</span>
+                <span class="s0">if </span><span class="s1">(min&gt;visited[p.name]+graph.getWeightEdge(p.name</span><span class="s0">,</span><span class="s1">startNode.name)):</span>
+                    <span class="s1">min=visited[p.name]</span>
+                    <span class="s1">temp=p</span>
+            <span class="s1">startNode=temp</span>
+        <span class="s1">solList.append(startNode.name)</span>
+        <span class="s1">solList.reverse()</span>
+        <span class="s0">return </span><span class="s1">solList</span>
+
+    <span class="s2"># Getting the cost of the path from the Start node to the goal node/Nodes</span>
+    <span class="s0">def </span><span class="s1">getPathCost(self</span><span class="s0">, </span><span class="s1">graph</span><span class="s0">, </span><span class="s1">list):</span>
+        <span class="s1">cost = </span><span class="s4">0</span>
+        <span class="s0">for </span><span class="s1">x </span><span class="s0">in </span><span class="s1">range(</span><span class="s4">0</span><span class="s0">, </span><span class="s1">len(list) - </span><span class="s4">1</span><span class="s1">):</span>
+            <span class="s1">cost += graph.getWeightEdge(list[x]</span><span class="s0">, </span><span class="s1">list[x + </span><span class="s4">1</span><span class="s1">])</span>
+        <span class="s0">return </span><span class="s1">cost</span>
+</pre>
+</body>
+</html>

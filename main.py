@@ -27,8 +27,6 @@ graph.connect('F' ,'C' ,5)
 
 graph.connect('C' ,'F' ,2)
 
-
-
 graph.connect('F' ,'G' ,4)
 graph.connect('D' ,'G' ,6)
 graph.connect('D' ,'H' ,2)

@@ -14,7 +14,7 @@ class Huristcis():
             n = fringe[0]
             fringe.pop(0)
 
-            list=ucs_search(graph,n,goal)
+            list=ucs(graph,n,goal)
             if (list==None):
                 if n in goal:
                     self.nodes[n]=0

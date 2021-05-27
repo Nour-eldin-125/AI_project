@@ -40,7 +40,13 @@ class Search():
                 print('\nReached goal by DFS algorithm !! \nThe path is : {}'.format(solList))
                 # getting a list of names of the visited nodes
                 print('Cost : {}\nThe list of visited Nodes : {}\n'.format(self.getPathCost(graph, solList), visited))
-                return
+
+                dict = {
+                    'path': solList,
+                    'cost': self.getPathCost(graph, solList),
+                    'visit': visited
+                }
+                return dict
 
             # else append the node to the visited list and add its children to the fringe
 
@@ -49,7 +55,6 @@ class Search():
                     if c.name not in visited:
                         fringe.append(c.name)
         print('\nDFS failed to get the goal')
-        return
 
     # Bfs Search Algorithm :
     def bfs(self, graph:Graph, startNode, goalNode):
@@ -77,11 +82,16 @@ class Search():
 
                 solList = self.getPathBfs(graph,graph.nodes[n], startNode,visited)
                 print('\nReached goal by BFS algorithm !! \nThe path is : {}'.format(solList))
-                # # Getting a list of names of the visited nodes
-                #
+                # Getting a list of names of the visited nodes
+
                 print('Cost : {}\nThe list of visited Nodes : {}\n'.format(self.getPathCost(graph, solList), visited))
 
-                return
+                dict = {
+                    'path': solList,
+                    'cost': self.getPathCost(graph, solList),
+                    'visit': visited
+                }
+                return dict
 
             # else append the node to the visited list and add its children to the fringe
 
@@ -117,7 +127,12 @@ class Search():
                 print('cost is : {}'.format(cost))
                 print('path is : {}'.format(self.getPathUCS(graph,graph.nodes[item],startNode,visited)))
                 print('Visited Nodes are : {}'.format(visited))
-                return
+                dict={
+                    'path':self.getPathUCS(graph,graph.nodes[item],startNode,visited),
+                    'cost':cost,
+                    'visit':visited
+                }
+                return dict
 
             else:
                 for i in graph.nodes[item].children:
@@ -172,14 +187,21 @@ class Search():
                 print("Reached goal by Greedy algorithm !! \nThe path is : {}".format(path))
                 print("Cost : {}".format(self.getPathCost(graph, path)))
                 print("The list of visited Nodes : {}".format(visited))
-                return
+
+                dict = {
+                    'path': path,
+                    'cost': self.getPathCost(graph, path),
+                    'visit': visited
+                }
+
+                return dict
             else:
                 for i in graph.nodes[n].children:
                     if (i.name not in visited.keys()):
                         fringe_dict[i.name] = heuristic_list[i.name]
                 list.clear()
         print('\nfailed to get the goal ')
-        return
+
 
         # Greedy Search Algorithm :
     def aStar (self, graph, startNode, goalNode,heuristic_list:{}):
@@ -205,7 +227,13 @@ class Search():
                 print('cost is : {}'.format(fringe_cost[item]))
                 print('path is : {}'.format(self.getPathUCS(graph, graph.nodes[item], startNode, fringe_cost)))
                 print('Visited Nodes are : {}'.format(visited))
-                return
+
+                dict = {
+                    'path': self.getPathUCS(graph, graph.nodes[item], startNode, fringe_cost),
+                    'cost': fringe_cost[item],
+                    'visit': visited
+                }
+                return dict
 
             else:
                 for i in graph.nodes[item].children:

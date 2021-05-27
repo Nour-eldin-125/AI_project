@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>heuristic.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+heuristic.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">Node </span><span class="s0">import </span><span class="s1">*</span>
+
+
+<span class="s0">class </span><span class="s1">Huristcis():</span>
+
+    <span class="s0">def </span><span class="s1">__init__(self):</span>
+        <span class="s1">self.nodes = {}</span>
+        <span class="s1">self.optimalCostNodes={}</span>
+
+    <span class="s0">def </span><span class="s1">getHuristic(self</span><span class="s0">, </span><span class="s1">graph:Graph</span><span class="s0">, </span><span class="s1">start</span><span class="s0">, </span><span class="s1">goal):</span>
+        <span class="s1">visited = []</span>
+        <span class="s1">fringe = [start]</span>
+        <span class="s0">while </span><span class="s1">len(fringe) != </span><span class="s2">0</span><span class="s1">:</span>
+            <span class="s1">n = fringe[</span><span class="s2">0</span><span class="s1">]</span>
+            <span class="s1">fringe.pop(</span><span class="s2">0</span><span class="s1">)</span>
+
+            <span class="s1">list=ucs_search(graph</span><span class="s0">,</span><span class="s1">n</span><span class="s0">,</span><span class="s1">goal)</span>
+            <span class="s0">if </span><span class="s1">(list==</span><span class="s0">None</span><span class="s1">):</span>
+                <span class="s0">if </span><span class="s1">n </span><span class="s0">in </span><span class="s1">goal:</span>
+                    <span class="s1">self.nodes[n]=</span><span class="s2">0</span>
+                <span class="s0">else</span><span class="s1">:</span>
+                    <span class="s1">p = graph.nodes[n].parent</span>
+                    <span class="s0">if </span><span class="s1">(p.name </span><span class="s0">in </span><span class="s1">self.nodes):</span>
+                        <span class="s1">self.nodes[n] = self.nodes[p.name] + </span><span class="s2">1</span>
+
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">self.nodes[n]=len(list)-</span><span class="s2">1</span>
+            <span class="s1">visited.append(n)</span>
+            <span class="s1">l=graph.nodes[n].children</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">l:</span>
+                <span class="s0">if </span><span class="s1">(j.name </span><span class="s0">not in </span><span class="s1">visited):</span>
+                    <span class="s1">fringe.append(j.name)</span>
+
+        <span class="s0">return </span><span class="s1">self.nodes</span>
+
+    <span class="s0">def </span><span class="s1">F_of_X (self</span><span class="s0">,</span><span class="s1">graph</span><span class="s0">,</span><span class="s1">start</span><span class="s0">,</span><span class="s1">goal):</span>
+        <span class="s0">for </span><span class="s1">g </span><span class="s0">in </span><span class="s1">goal:</span>
+            <span class="s1">graph.nodes[g].goal = </span><span class="s0">True</span>
+        <span class="s1">self.getHuristic(graph</span><span class="s0">,</span><span class="s1">start</span><span class="s0">,</span><span class="s1">goal)</span>
+        <span class="s1">visited = []</span>
+        <span class="s1">fringe = [start]</span>
+        <span class="s0">while </span><span class="s1">len(fringe) != </span><span class="s2">0</span><span class="s1">:</span>
+            <span class="s1">n = fringe[</span><span class="s2">0</span><span class="s1">]</span>
+            <span class="s1">fringe.pop(</span><span class="s2">0</span><span class="s1">)</span>
+            <span class="s0">if </span><span class="s1">(n </span><span class="s0">in </span><span class="s1">goal):</span>
+                <span class="s1">self.optimalCostNodes [n]=getPathCost(graph</span><span class="s0">,</span><span class="s1">getPath(graph.nodes[n]</span><span class="s0">,</span><span class="s1">start))</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">self.optimalCostNodes [n]= self.nodes[n] + getPathCost(graph</span><span class="s0">,</span><span class="s1">getPath(graph.nodes[n]</span><span class="s0">,</span><span class="s1">start))</span>
+            <span class="s1">visited.append(n)</span>
+            <span class="s1">l=graph.nodes[n].children</span>
+            <span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">l:</span>
+                <span class="s0">if </span><span class="s1">(j.name </span><span class="s0">not in </span><span class="s1">visited):</span>
+                    <span class="s1">fringe.append(j.name)</span>
+
+        <span class="s0">return </span><span class="s1">self.optimalCostNodes</span>
+</pre>
+</body>
+</html>

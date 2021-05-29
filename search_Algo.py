@@ -346,13 +346,14 @@ class Search():
 
     def getPath_H_of_X(self,startNode:Node, start, visited: {}):
         solList = []
-        value=None
+        value=''
         while startNode.name != start:
             solList.append(startNode.name)
             min = 9999
+            print(solList)
             for p in startNode.parent:
                 if min > visited[p.name]:
-                    if (p==value):
+                    if (p==value) or p.name in solList:
                         continue
                     if (p in startNode.children):
                         value=startNode

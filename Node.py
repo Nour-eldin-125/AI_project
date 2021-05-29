@@ -59,7 +59,7 @@ class Graph():
         # checks if the name already exists in the graph
         if sourceNode in self.nodes and destinationNode in self.nodes:
             if sourceNode != destinationNode:  # checks if the names are different
-                if weight > 0:  # checks if the weight is positive
+                if weight >= 0:  # checks if the weight is positive
                     # connects the nodes
                     self.nodes[sourceNode].addChild(self.nodes[destinationNode], weight)
                 else:

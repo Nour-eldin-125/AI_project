@@ -2,21 +2,24 @@ from tkinter import *
 from tkinter import ttk
 from Node import Graph
 from search_Algo import Search
+import matplotlib.pyplot as plt
+import networkx as nx
 
-
-function=[]
-node= {}
-edges={}
+function= ''
+node= []
+edges=[]
 heu={}
-startNode =[]
+startNode =''
 goalNode=[]
 graph=Graph()
+s=Search()
 
 def buildGraph ():
     stringNode=nodeEntry.get()
     stringEdge=edgeEntry.get()
     stringheu=heuEntry.get()
-    startn=startEntry.get()
+    global startNode,goalNode,node,edges,heu
+    startNode = startEntry.get()
     gn=goalEntry.get()
     str=''
     for x in stringNode:
@@ -24,9 +27,10 @@ def buildGraph ():
             str+=x
         if (x==','):
             graph.addNode(str)
+            node.append(str)
             str=''
     graph.addNode(str)
-    node=graph.nodes
+    node.append(str)
     str1=''
     str2=''
     int1=''
@@ -44,7 +48,7 @@ def buildGraph ():
         if x== '-':
             isint=False
             graph.connect(str1,str2,int(int1))
-            edges={(str1,str2):int1}
+            edges.append((str1,str2,int(int1)))
 
             str1=''
             str2=''
@@ -54,7 +58,7 @@ def buildGraph ():
         if x== '=':
             isint=True
     graph.connect(str1, str2, int(int1))
-    edges = {(str1, str2): int1}
+    edges.append((str1,str2,int(int1)))
 
     str=''
     isString=True
@@ -81,12 +85,12 @@ def buildGraph ():
             goalNode.append(str)
             str=''
     goalNode.append(str)
-    startNode.append(startn)
 
 
 
 def bfs():
-    s=Search()
+    global function
+    function = "bfs"
     dict = s.bfs(graph, startNode[0], goalNode)
     labelBfs = Label(frame2, text="The result of the function BFS")
     labelpath = Label(frame2, text="the path is : {}".format(dict['path']))
@@ -97,10 +101,9 @@ def bfs():
     labelcost.pack()
     labelvisited.pack()
 
-
 def dfs():
-
-    s = Search()
+    global function
+    function = "dfs"
     dict = s.dfs(graph, startNode[0], goalNode)
     labelDfs     = Label(frame2, text="The result of the function DFS")
     labelpath    = Label(frame2, text="the path is : {}".format(dict['path']))
@@ -112,7 +115,8 @@ def dfs():
     labelvisited.pack()
 
 def ucs():
-    s = Search()
+    global function
+    function = "ucs"
     dict = s.ucs(graph, startNode[0], goalNode)
     labelUcs     = Label(frame2, text="The result of the function UCS")
     labelpath    = Label(frame2, text="the path is : {}".format(dict['path']))
@@ -122,8 +126,10 @@ def ucs():
     labelpath.pack()
     labelcost.pack()
     labelvisited.pack()
+
 def greedy():
-    s = Search()
+    global function
+    function = "greedy"
     dict = s.greedy(graph, startNode[0], goalNode,heu)
     labelGreedy     = Label(frame2, text="The result of the function Greedy")
     labelpath    = Label(frame2, text="the path is : {}".format(dict['path']))
@@ -134,9 +140,10 @@ def greedy():
     labelcost.pack()
     labelvisited.pack()
 
-
 def aStar():
-    s = Search()
+
+    global function
+    function = "astar"
     dict = s.aStar(graph, startNode[0], goalNode, heu)
     labelaStar = Label(frame2, text="The result of the function A*")
     labelpath = Label(frame2, text="the path is : {}".format(dict['path']))
@@ -146,6 +153,64 @@ def aStar():
     labelpath.pack()
     labelcost.pack()
     labelvisited.pack()
+
+def Draw():
+
+    if (function == 'astar'):
+        dict = s.aStar(graph, startNode, goalNode, heu)
+    elif(function=='dfs'):
+        dict = s.dfs(graph, startNode, goalNode)
+    elif(function == 'ucs'):
+        dict = s.ucs(graph, startNode, goalNode)
+    elif(function =='bfs'):
+        dict = s.bfs(graph, startNode, goalNode)
+    elif(function == 'greedy'):
+        dict = s.greedy(graph, startNode, goalNode, heu)
+
+    list=dict['path']
+    path=[]
+    for x in range(len(list)-1):
+        path.append((list[x],list[x+1]))
+
+    notpath=[]
+    for e in edges:
+        notpath.append((e[0],e[1]))
+
+    for x in path:
+        if (x in notpath):
+            notpath.remove(x)
+    notGoalNode=[]
+    for n in node:
+        if (n not in goalNode):
+            notGoalNode.append(n)
+
+    G = nx.DiGraph()
+    G.add_weighted_edges_from(edges)
+    pos = nx.planar_layout(G)
+    labels = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edges(
+        G,
+        pos,
+        edgelist=path,
+        width=5,
+        alpha=0.5,
+        edge_color="r",
+
+    )
+    nx.draw_networkx_edges(
+        G,
+        pos,
+        edgelist=notpath,
+        edge_color='black',
+    )
+
+    nx.draw_networkx_nodes(G, pos, nodelist=notGoalNode, node_size=500,
+                           node_color='r')
+    nx.draw_networkx_nodes(G, pos, nodelist=goalNode, node_size=500, node_color='b')
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, label_pos=0.3)
+    plt.show()
+
 
 
 root=Tk()
@@ -212,18 +277,8 @@ Greedybutton.pack()
 Abutton=ttk.Button(frame1, text="A*",command=aStar)
 Abutton.pack()
 
-Drawbutton=ttk.Button(frame1, text="Draw Graph", width=40, padding=10)
+Drawbutton=ttk.Button(frame1, text="Draw Graph", width=40, padding=10, command=Draw)
 Drawbutton.pack(pady=10)
-
-Pathbutton=ttk.Button(frame1, text="Path")
-Pathbutton.pack()
-
-PathCostbutton=ttk.Button(frame1, text="Path Cost")
-PathCostbutton.pack()
-
-Visitedbutton=ttk.Button(frame1, text="Visited List")
-Visitedbutton.pack()
-
 
 #Calling Main()
 root.mainloop()

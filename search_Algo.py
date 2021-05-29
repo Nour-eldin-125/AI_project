@@ -183,7 +183,7 @@ class Search():
 
             if n in goalNodes:
                 print('the start node is : {}'.format(startNode))
-                path = self.getPath_H_of_X(graph.nodes[n], startNode,heuristic_list)
+                path = self.getPath_H_of_X(graph.nodes[n], startNode,heuristic_list,visited)
                 print("Reached goal by Greedy algorithm !! \nThe path is : {}".format(path))
                 print("Cost : {}".format(self.getPathCost(graph, path)))
                 print("The list of visited Nodes : {}".format(visited))
@@ -344,7 +344,7 @@ class Search():
         solList.reverse()
         return solList
 
-    def getPath_H_of_X(self,startNode:Node, start, visited: {}):
+    def getPath_H_of_X(self, startNode:Node, start, heu: {},visit:{}):
         solList = []
         value=''
         while startNode.name != start:
@@ -352,14 +352,17 @@ class Search():
             min = 9999
             print(solList)
             for p in startNode.parent:
-                if min > visited[p.name]:
-                    if (p==value) or p.name in solList:
-                        continue
-                    if (p in startNode.children):
-                        value=startNode
+                if p.name in visit:
+                    if min > heu[p.name]:
+                        if (p == value) or p.name in solList:
+                            continue
+                        if (p in startNode.children):
+                            value = startNode
 
-                    min = visited[p.name]
-                    temp = p
+                        min = heu[p.name]
+                        temp = p
+                else:
+                    continue
             startNode = temp
         solList.append(startNode.name)
         solList.reverse()
